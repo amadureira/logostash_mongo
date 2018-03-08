@@ -1,0 +1,56 @@
+input {
+# syslog {
+#   id    => 'audit'
+#   port  => 5154
+#   codec  => "json"
+# }
+# tcp {
+#   port  => 5154
+#   codec  => "json"
+# }
+  syslog {
+   id      =>  "logs"
+   port    => 5154
+   codec   => "json"
+   workers => 10
+ }
+}
+#filter {
+###  json {
+###    source => "message"
+###  }
+##
+##  if [operation] == "update" {
+##   mutate { add_tag => 'update' } 
+##  }
+## 
+#}
+output {
+    file {
+      path => '/tmp/all.log'
+      codec => 'json'
+    }
+
+#  if "update" in [tags] {
+##    mongodb {
+##      id         => "awx-update"
+##      collection => "update"
+##      database   => "logs"
+##      uri        => "mongodb://172.17.0.2,172.17.0.3,172.17.0.4/logs?replicaSet=bla"
+##    }
+#    file {
+#      path => '/tmp/update.txt'
+#    }
+#
+#  } else { 
+##    mongodb {
+##      id         => "awx-generic"
+##      collection => "generic"
+##      database   => "logs"
+##      uri        => "mongodb://172.17.0.2,172.17.0.3,172.17.0.4/logs?replicaSet=bla"
+##    }
+#    file {
+#      path => '/tmp/generic.txt'
+#    }
+#  }
+}

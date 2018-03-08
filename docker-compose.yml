@@ -1,4 +1,8 @@
 version: '2'
+volumes:
+    database_disk:
+    logstash_config:
+          external: true
 services:
   postgres:
     image: "postgres:9.6"
@@ -6,11 +10,22 @@ services:
       POSTGRES_USER: awx
       POSTGRES_PASSWORD: awxpass
       POSTGRES_DB: awx
-
+    volumes:
+     -   database_disk:/var/lib/postgresql/
   rabbitmq:
     image: "rabbitmq:3"
     environment:
       RABBITMQ_DEFAULT_VHOST: awx
+
+  logstash:
+    image: "logstash:vv"
+    volumes:
+       -  logstash_config:/config/
+    command: logstash -f /config/config-dir/logstash.1.conf
+    environment:
+      PORT: 5154
+      DEST: "/tmp/teste.2.log"
+
 
   memcached:
     image: "memcached:alpine"
@@ -21,6 +36,7 @@ services:
       - rabbitmq
       - memcached
       - postgres
+      - logstash 
     ports:
       - "80:8052"
     hostname: awxweb
@@ -47,6 +63,7 @@ services:
       - memcached
       - awx_web:awxweb
       - postgres
+      - logstash 
     hostname: awx
     user: root
     environment:

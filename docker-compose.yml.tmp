@@ -1,0 +1,19 @@
+version: '2'
+volumes:
+    logstash_vl:
+services:
+   logstash_2:
+    image: "logstash:vv"
+    volumes:
+       -  blabla:/config/
+    command: logstash -f /config/config-dir/logstash.1.conf
+    environment:
+      PORT: 5154
+      DEST: "/tmp/teste.2.log"
+volumes:
+      blabla:
+        external:
+          name: logostashmongo_bla
+#     - type: bind
+#       source: /home/anderson.madureira/scripts/docker/logostash_mongo
+#       target: /config/
